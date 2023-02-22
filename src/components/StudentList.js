@@ -1,5 +1,6 @@
 import React from "react";
 import Student from "./Student";
+import StudentForm from "./StudentForm";
 import "./StudentList.css";
 
 export default function StudentList(props) {
@@ -21,6 +22,10 @@ export default function StudentList(props) {
           <Student key={stu.id} stu={stu.attributes} stuId={stu.id} />
         ))}
       </tbody>
+
+      <tfoot>
+        <StudentForm />
+      </tfoot>
     </table>
   );
 }
