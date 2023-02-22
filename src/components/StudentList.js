@@ -12,12 +12,13 @@ export default function StudentList(props) {
           <th>性别</th>
           <th>年龄</th>
           <th>地址</th>
+          <th>操作</th>
         </tr>
       </thead>
 
       <tbody>
         {props.stus.map((stu) => (
-          <Student key={stu.id} stu={stu.attributes} />
+          <Student key={stu.id} stu={stu.attributes} stuId={stu.id} />
         ))}
       </tbody>
     </table>

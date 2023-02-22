@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import StudentList from "./components/StudentList";
+import StuContext from "./store/StuContext";
 import "./App.css";
 function App() {
   const [stuData, setStuData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  useEffect(() => {
+
+  const fetchData = useCallback(() => {
     // 设置loading为正在加载true
     setLoading(true);
-    fetch("http://localhost:1337/api/student")
+    fetch("http://localhost:1337/api/students")
       .then((res) => {
         // 判断响应是否正常返回
         if (res.ok) {
@@ -35,12 +37,24 @@ function App() {
         setError(e.message);
       });
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const loadDataHandler = () => {
+    fetchData();
+  };
+
   return (
-    <div className="app">
-      {!loading && !error && <StudentList stus={stuData} />}
-      {loading ? "数据正在加载中" : ""}
-      {error && <p>error</p>}
-    </div>
+    <StuContext.Provider value={{ fetchData }}>
+      <div className="app">
+        <button onClick={loadDataHandler}>加载数据</button>
+        {!loading && !error && <StudentList stus={stuData} />}
+        {loading ? "数据正在加载中" : ""}
+        {error && <p>error</p>}
+      </div>
+    </StuContext.Provider>
   );
 }
 
