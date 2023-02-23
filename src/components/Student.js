@@ -1,11 +1,14 @@
 import React, { useState, useCallback, Fragment, useContext } from "react";
 import StuContext from "../store/StuContext";
+import StudentForm from "./StudentForm";
 
 const Student = (props) => {
   // {stu:{name, age, gender, address}} = props
 
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   const ctx = useContext(StuContext);
 
   const deleteStu = useCallback(() => {
@@ -34,17 +37,26 @@ const Student = (props) => {
     deleteStu();
   };
 
+  const cancelEdit = () => {
+    setIsEdit(false);
+  };
+
   return (
     <Fragment>
-      <tr>
-        <td>{props.stu.name}</td>
-        <td>{props.stu.gender}</td>
-        <td>{props.stu.age}</td>
-        <td>{props.stu.address}</td>
-        <td>
-          <button onClick={deleteHandler}>删除</button>
-        </td>
-      </tr>
+      {!isEdit ? (
+        <tr>
+          <td>{props.stu.name}</td>
+          <td>{props.stu.gender}</td>
+          <td>{props.stu.age}</td>
+          <td>{props.stu.address}</td>
+          <td>
+            <button onClick={deleteHandler}>删除</button>
+            <button onClick={() => setIsEdit(true)}>修改</button>
+          </td>
+        </tr>
+      ) : (
+        <StudentForm stu={props.stu} onCancel={cancelEdit} />
+      )}
 
       {deleting && (
         <tr>

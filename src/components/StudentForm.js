@@ -2,12 +2,12 @@ import React, { useState, useCallback, useContext } from "react";
 import StuContext from "../store/StuContext";
 import "./StudentForm.css";
 
-export default function StudentForm() {
+export default function StudentForm(props) {
   const [inputData, setInputData] = useState({
-    name: "猪八戒",
-    gender: "男",
-    age: 18,
-    address: "高老庄",
+    name: props.stu ? props.stu.name : "只因",
+    gender: props.stu ? props.stu.gender : "男",
+    age: props.stu ? props.stu.age : 8848,
+    address: props.stu ? props.stu.address : "高老庄",
   });
 
   const ctx = useContext(StuContext);
@@ -85,7 +85,14 @@ export default function StudentForm() {
           />
         </td>
         <td>
-          <button onClick={submitHandler}>添加</button>
+          {props.stu ? (
+            <>
+              <button onClick={() => props.onCancel()}>取消修改</button>{" "}
+              <button onClick={() => alert("ok")}>确认修改</button>
+            </>
+          ) : (
+            <button onClick={submitHandler}>添加</button>
+          )}
         </td>
       </tr>
 
