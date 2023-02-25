@@ -55,7 +55,11 @@ const Student = (props) => {
           </td>
         </tr>
       ) : (
-        <StudentForm stu={props.stu} onCancel={cancelEdit} />
+        <StudentForm
+          stu={props.stu}
+          stuId={props.stuId}
+          onCancel={cancelEdit}
+        />
       )}
 
       {deleting && (

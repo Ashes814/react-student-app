@@ -38,6 +38,28 @@ export default function StudentForm(props) {
     }
   }, []);
 
+  const updateStudent = useCallback(async (id, newStu) => {
+    try {
+      setError(null);
+      setLoading(true);
+      const res = await fetch(`http://localhost:1337/api/students/${id}`, {
+        method: "put",
+        body: JSON.stringify({ data: newStu }),
+        headers: { "Content-type": "application/json" },
+      });
+
+      if (!res.ok) {
+        throw new Error("修改失败!");
+      }
+
+      ctx.fetchData();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const nameChangeHandler = (e) => {
     setInputData((prevState) => ({ ...prevState, name: e.target.value }));
   };
@@ -53,6 +75,10 @@ export default function StudentForm(props) {
 
   const submitHandler = () => {
     addStudent(inputData);
+  };
+
+  const updateHandler = () => {
+    updateStudent(props.stuId, inputData);
   };
   return (
     <>
@@ -88,7 +114,7 @@ export default function StudentForm(props) {
           {props.stu ? (
             <>
               <button onClick={() => props.onCancel()}>取消修改</button>{" "}
-              <button onClick={() => alert("ok")}>确认修改</button>
+              <button onClick={() => updateHandler()}>确认修改</button>
             </>
           ) : (
             <button onClick={submitHandler}>添加</button>
