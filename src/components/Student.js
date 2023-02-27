@@ -1,37 +1,25 @@
 import React, { useState, useCallback, Fragment, useContext } from "react";
+import useFetch from "../hooks/useFetch";
 import StuContext from "../store/StuContext";
 import StudentForm from "./StudentForm";
 
 const Student = (props) => {
   // {stu:{name, age, gender, address}} = props
-
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
+  const { isEdit, setIsEdit } = useState(false);
 
   const ctx = useContext(StuContext);
 
-  const deleteStu = useCallback(() => {
-    setDeleting(true);
-    setError(null);
-    //删除学生
-    fetch(`http://localhost:1337/api/students/${props.stuId}`, {
+  const {
+    loading: deleting,
+    error,
+    fetchData: deleteStu,
+  } = useFetch(
+    {
+      url: `http://localhost:1337/api/students/${props.stuId}`,
       method: "delete",
-    })
-      .then((res) => {
-        if (res.ok) {
-          ctx.fetchData();
-          return res.json();
-        }
-        throw new Error("删除失败");
-      })
-      .catch((e) => {
-        setError(e);
-      })
-      .finally(() => {
-        setDeleting(false);
-      });
-  }, []);
+    },
+    ctx.fetchData
+  );
 
   const deleteHandler = () => {
     deleteStu();
@@ -41,6 +29,7 @@ const Student = (props) => {
     setIsEdit(false);
   };
 
+  // console.log(setIsEdit);
   return (
     <Fragment>
       {!isEdit ? (
@@ -51,7 +40,14 @@ const Student = (props) => {
           <td>{props.stu.address}</td>
           <td>
             <button onClick={deleteHandler}>删除</button>
-            <button onClick={() => setIsEdit(true)}>修改</button>
+            <button
+              onClick={() => {
+                console.log(1);
+                setIsEdit(true);
+              }}
+            >
+              修改
+            </button>
           </td>
         </tr>
       ) : (

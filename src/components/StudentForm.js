@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useContext } from "react";
+import useFetch from "../hooks/useFetch";
 import StuContext from "../store/StuContext";
 import "./StudentForm.css";
 
@@ -12,53 +13,20 @@ export default function StudentForm(props) {
 
   const ctx = useContext(StuContext);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // 创建一个添加学生的方法
-  const addStudent = useCallback(async (newStu) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await fetch(`http://localhost:1337/api/students`, {
-        method: "post",
-        body: JSON.stringify({ data: newStu }),
-        headers: { "Content-type": "application/json" },
-      });
-
-      if (!res.ok) {
-        throw new Error("添加失败!");
-      }
-
-      ctx.fetchData();
-    } catch (e) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const updateStudent = useCallback(async (id, newStu) => {
-    try {
-      setError(null);
-      setLoading(true);
-      const res = await fetch(`http://localhost:1337/api/students/${id}`, {
-        method: "put",
-        body: JSON.stringify({ data: newStu }),
-        headers: { "Content-type": "application/json" },
-      });
-
-      if (!res.ok) {
-        throw new Error("修改失败!");
-      }
-
-      ctx.fetchData();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const {
+    loading,
+    error,
+    fetchData: updateStudent,
+  } = useFetch(
+    {
+      url: props.stuId
+        ? `http://localhost:1337/api/students/${props.stuId}`
+        : "http://localhost:1337/api/students",
+      method: props.stuId ? "put" : "post",
+      body: inputData,
+    },
+    ctx.fetchData
+  );
 
   const nameChangeHandler = (e) => {
     setInputData((prevState) => ({ ...prevState, name: e.target.value }));
@@ -74,7 +42,7 @@ export default function StudentForm(props) {
   };
 
   const submitHandler = () => {
-    addStudent(inputData);
+    updateStudent(inputData);
   };
 
   const updateHandler = () => {
