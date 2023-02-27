@@ -46,7 +46,7 @@ export default function StudentForm(props) {
   };
 
   const updateHandler = () => {
-    updateStudent(props.stuId, inputData);
+    updateStudent(inputData);
   };
   return (
     <>

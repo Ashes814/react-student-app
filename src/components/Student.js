@@ -1,11 +1,11 @@
-import React, { useState, useCallback, Fragment, useContext } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import useFetch from "../hooks/useFetch";
 import StuContext from "../store/StuContext";
 import StudentForm from "./StudentForm";
 
 const Student = (props) => {
   // {stu:{name, age, gender, address}} = props
-  const { isEdit, setIsEdit } = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   const ctx = useContext(StuContext);
 
@@ -42,7 +42,6 @@ const Student = (props) => {
             <button onClick={deleteHandler}>删除</button>
             <button
               onClick={() => {
-                console.log(1);
                 setIsEdit(true);
               }}
             >
